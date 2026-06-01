@@ -1,4 +1,4 @@
-const MODEL = 'claude-sonnet-4-20250514';
+const MODEL = 'claude-sonnet-4-5';
 
 const SYSTEM_PROMPT = `You are a scheduling assistant for a barbershop quartet app called Vocal Spectrum.
 The app covers exactly 7 days: Monday June 29 through Sunday July 5, 2025.
