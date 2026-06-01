@@ -58,30 +58,49 @@ For unclear commands:
   "message": "I could not understand that command. Try: 'Add rehearsal Tuesday at 2pm at the Convention Center'"
 }`;
 
-export async function parseScheduleCommand(command, currentMember) {
-  const apiKey = process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY;
-
-  if (!apiKey || apiKey === 'your_anthropic_api_key_here') {
-    throw new Error('ANTHROPIC_API_KEY not configured in .env');
+function getApiUrl() {
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return '/api/claude';
   }
+  return null; // use direct API for local dev
+}
 
+export async function parseScheduleCommand(command, currentMember) {
   const userMessage = `Current user: ${currentMember}\n\nCommand: ${command}`;
+  const body = {
+    model: MODEL,
+    max_tokens: 512,
+    system: SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: userMessage }],
+  };
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-client-side-key-usage': 'true',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 512,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: userMessage }],
-    }),
-  });
+  const proxyUrl = getApiUrl();
+  let response;
+
+  if (proxyUrl) {
+    // Deployed on Vercel — use server-side proxy
+    response = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  } else {
+    // Local development — call Anthropic directly
+    const apiKey = process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY;
+    if (!apiKey || apiKey === 'your_anthropic_api_key_here') {
+      throw new Error('ANTHROPIC_API_KEY not configured in .env');
+    }
+    response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-client-side-key-usage': 'true',
+      },
+      body: JSON.stringify(body),
+    });
+  }
 
   if (!response.ok) {
     const err = await response.text();
