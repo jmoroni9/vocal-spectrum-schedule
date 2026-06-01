@@ -2,17 +2,26 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { COLORS, getMemberColor, formatTime } from '../constants';
 
+function getEventEmoji(title) {
+  if (!title) return '';
+  const t = title.toUpperCase();
+  if (t.includes('AIC')) return '🥇 ';
+  if (t.includes('AOH') || t.includes('AMBASSADOR') || t.includes('RECRUIT')) return '🎵 ';
+  return '';
+}
+
 export default function EventCard({ event }) {
   const color = getMemberColor(event.owner);
   const ownerLabel =
     event.owner === 'vocal_spectrum'
       ? 'Vocal Spectrum'
       : event.owner.charAt(0).toUpperCase() + event.owner.slice(1);
+  const emoji = getEventEmoji(event.title);
 
   return (
     <View style={[styles.card, { borderLeftColor: color }]}>
       <View style={styles.topRow}>
-        <Text style={styles.title} numberOfLines={2}>{event.title}</Text>
+        <Text style={styles.title} numberOfLines={2}>{emoji}{event.title}</Text>
         <View style={[styles.ownerBadge, { backgroundColor: color + '33', borderColor: color + '66' }]}>
           <Text style={[styles.ownerText, { color }]}>{ownerLabel}</Text>
         </View>

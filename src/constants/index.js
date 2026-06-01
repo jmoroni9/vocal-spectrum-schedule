@@ -9,7 +9,7 @@ export const COLORS = {
   tim: '#22c55e',
   chris: '#f97316',
   eric: '#a855f7',
-  vocal_spectrum: '#ef4444',
+  vocal_spectrum: '#D4A017',
   inputBg: '#1c3049',
 };
 
