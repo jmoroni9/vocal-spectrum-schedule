@@ -111,13 +111,10 @@ export default function AddEventScreen({ onHome }) {
         </View>
 
         {/* Instructions */}
-        <Text style={styles.sectionLabel}>What would you like to do?</Text>
-        <View style={styles.examples}>
-          <Text style={styles.exampleTitle}>Examples:</Text>
-          <Text style={styles.example}>• "Add dinner Tuesday at 7pm at Tony's"</Text>
-          <Text style={styles.example}>• "Add a Vocal Spectrum warm-up Friday at 8am in Room 204"</Text>
-          <Text style={styles.example}>• "Remove the AIC Significant's Luncheon on Thursday"</Text>
-          <Text style={styles.example}>• "Remove my rehearsal on Wednesday"</Text>
+        <View style={styles.instructionBox}>
+          <Text style={styles.instructionText}>
+            What updates do you need to make?{'\n'}Be sure to include your name if it only pertains to you.
+          </Text>
         </View>
       </View>
 
@@ -212,22 +209,18 @@ const styles = StyleSheet.create({
   memberChipTextActive: {
     color: '#fff',
   },
-  examples: {
+  instructionBox: {
     backgroundColor: COLORS.surface,
     borderRadius: 14,
-    padding: 16,
-    gap: 6,
+    padding: 20,
+    borderLeftWidth: 4,
+    borderLeftColor: COLORS.vocal_spectrum,
   },
-  exampleTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: COLORS.textMuted,
-    marginBottom: 4,
-  },
-  example: {
-    fontSize: 13,
-    color: COLORS.textMuted,
-    lineHeight: 20,
+  instructionText: {
+    fontSize: 16,
+    color: COLORS.text,
+    lineHeight: 26,
+    fontWeight: '500',
   },
   promptBar: {
     flexDirection: 'row',
