@@ -6,6 +6,7 @@ import { ToastProvider } from './src/components/Toast';
 import MemberSelectScreen from './src/screens/MemberSelectScreen';
 import MainScreen from './src/screens/MainScreen';
 import MasterScheduleScreen from './src/screens/MasterScheduleScreen';
+import AddEventScreen from './src/screens/AddEventScreen';
 import { COLORS } from './src/constants';
 
 export default function App() {
@@ -21,10 +22,14 @@ export default function App() {
             <MemberSelectScreen
               onSelect={(memberId) => setScreen(memberId)}
               onMasterSchedule={() => setScreen('master')}
+              onAddEvent={() => setScreen('add')}
             />
           )}
           {screen === 'master' && (
             <MasterScheduleScreen onHome={() => setScreen(null)} />
+          )}
+          {screen === 'add' && (
+            <AddEventScreen onHome={() => setScreen(null)} />
           )}
           {screen !== null && screen !== 'master' && (
             <MainScreen

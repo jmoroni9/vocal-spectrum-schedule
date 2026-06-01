@@ -12,7 +12,7 @@ const HEADSHOTS = {
 
 const LOGO = require('../../assets/Vocal Spectrum - Album by Vocal Spectrum Spotify 2025-09-02 at 9.16.38 AM.jpg');
 
-export default function MemberSelectScreen({ onSelect, onMasterSchedule }) {
+export default function MemberSelectScreen({ onSelect, onMasterSchedule, onAddEvent }) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -25,7 +25,11 @@ export default function MemberSelectScreen({ onSelect, onMasterSchedule }) {
       </TouchableOpacity>
 
       <Text style={styles.appName}>Vocal Spectrum</Text>
-      <Text style={styles.subtitle}>2025 Convention Schedule · Tap logo for Master Schedule</Text>
+      <Text style={styles.subtitle}>2026 Convention Schedule · Tap logo for Master Schedule</Text>
+
+      <TouchableOpacity style={styles.addEventButton} onPress={onAddEvent} activeOpacity={0.8}>
+        <Text style={styles.addEventText}>+ ADD AN EVENT</Text>
+      </TouchableOpacity>
 
       <Text style={styles.prompt}>Who are you?</Text>
 
@@ -80,7 +84,20 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: COLORS.textMuted,
-    marginBottom: 32,
+    marginBottom: 16,
+  },
+  addEventButton: {
+    backgroundColor: COLORS.vocal_spectrum,
+    paddingHorizontal: 28,
+    paddingVertical: 12,
+    borderRadius: 24,
+    marginBottom: 24,
+  },
+  addEventText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '800',
+    letterSpacing: 1,
   },
   prompt: {
     fontSize: 16,
