@@ -8,7 +8,7 @@ import { COLORS } from '../constants';
 import CalendarScreen from './CalendarScreen';
 
 export default function MainScreen({ selectedMember, onHome }) {
-  const [activeTab, setActiveTab] = useState('vocal_spectrum');
+  const [activeTab, setActiveTab] = useState(selectedMember);
   const [showAddModal, setShowAddModal] = useState(false);
 
   return (
