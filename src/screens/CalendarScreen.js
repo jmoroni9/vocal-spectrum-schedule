@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import DayStrip from '../components/DayStrip';
 import EventCard from '../components/EventCard';
+import EditEventModal from '../components/EditEventModal';
 import { COLORS, WEEK_DAYS } from '../constants';
 import { fetchEvents, subscribeToEvents } from '../lib/supabase';
 
@@ -17,6 +18,7 @@ export default function CalendarScreen({ tabId }) {
   const [selectedDate, setSelectedDate] = useState(WEEK_DAYS[0].date);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
 
   const load = useCallback(async () => {
     try {
@@ -49,6 +51,11 @@ export default function CalendarScreen({ tabId }) {
 
   return (
     <View style={styles.container}>
+      <EditEventModal
+        visible={!!editingEvent}
+        event={editingEvent}
+        onClose={() => { setEditingEvent(null); load(); }}
+      />
       <DayStrip selectedDate={selectedDate} onDayPress={setSelectedDate} />
 
       {loading ? (
@@ -77,7 +84,7 @@ export default function CalendarScreen({ tabId }) {
             </View>
           ) : (
             visibleEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.id} event={event} onPress={() => setEditingEvent(event)} />
             ))
           )}
         </ScrollView>

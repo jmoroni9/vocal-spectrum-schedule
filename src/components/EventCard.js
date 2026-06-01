@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS, getMemberColor, formatTime } from '../constants';
 
 function getEventEmoji(title) {
@@ -10,7 +10,7 @@ function getEventEmoji(title) {
   return '';
 }
 
-export default function EventCard({ event }) {
+export default function EventCard({ event, onPress }) {
   const color = getMemberColor(event.owner);
   const ownerLabel =
     event.owner === 'vocal_spectrum'
@@ -19,7 +19,11 @@ export default function EventCard({ event }) {
   const emoji = getEventEmoji(event.title);
 
   return (
-    <View style={[styles.card, { borderLeftColor: color }]}>
+    <TouchableOpacity
+      style={[styles.card, { borderLeftColor: color }]}
+      onPress={onPress}
+      activeOpacity={0.75}
+    >
       <View style={styles.topRow}>
         <Text style={styles.title} numberOfLines={2}>{emoji}{event.title}</Text>
         <View style={[styles.ownerBadge, { backgroundColor: color + '33', borderColor: color + '66' }]}>
@@ -48,7 +52,8 @@ export default function EventCard({ event }) {
           <Text style={[styles.metaText, styles.notes]}>{event.notes}</Text>
         </View>
       ) : null}
-    </View>
+      <Text style={styles.editHint}>Tap to edit ›</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -101,5 +106,11 @@ const styles = StyleSheet.create({
   },
   notes: {
     fontStyle: 'italic',
+  },
+  editHint: {
+    fontSize: 11,
+    color: COLORS.border,
+    textAlign: 'right',
+    marginTop: 6,
   },
 });

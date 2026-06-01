@@ -36,6 +36,17 @@ export async function addEvent(event) {
   return data;
 }
 
+export async function updateEvent(id, updates) {
+  const { data, error } = await supabase
+    .from('events')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 export async function deleteEventById(id) {
   const { error } = await supabase
     .from('events')
