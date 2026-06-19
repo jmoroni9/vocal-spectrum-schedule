@@ -87,29 +87,31 @@ export default function EditEventModal({ visible, event, onClose }) {
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      'Delete Event',
-      `Are you sure you want to delete "${event?.title}"?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            setDeleting(true);
-            try {
-              await deleteEventById(event.id);
-              showToast(`🗑️ Deleted "${event.title}"`);
-              onClose();
-            } catch (e) {
-              showToast(`❌ ${e.message}`);
-            } finally {
-              setDeleting(false);
-            }
-          },
-        },
-      ]
-    );
+    const doDelete = async () => {
+      setDeleting(true);
+      try {
+        await deleteEventById(event.id);
+        showToast(`🗑️ Deleted "${event.title}"`);
+        onClose();
+      } catch (e) {
+        showToast(`❌ ${e.message}`);
+      } finally {
+        setDeleting(false);
+      }
+    };
+
+    if (Platform.OS === 'web') {
+      if (window.confirm(`Delete "${event?.title}"?`)) doDelete();
+    } else {
+      Alert.alert(
+        'Delete Event',
+        `Are you sure you want to delete "${event?.title}"?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'Delete', style: 'destructive', onPress: doDelete },
+        ]
+      );
+    }
   };
 
   if (!event) return null;
