@@ -3,7 +3,7 @@ const MODEL = 'claude-sonnet-4-5';
 const SYSTEM_PROMPT = `You are a scheduling assistant for a barbershop quartet app called Vocal Spectrum.
 The app covers exactly 7 days: Monday June 29 through Sunday July 5, 2025.
 
-Day reference:
+CRITICAL — you MUST use ONLY these dates. Do not compute dates yourself. Map day names exactly as follows:
 - Monday = 2025-06-29
 - Tuesday = 2025-06-30
 - Wednesday = 2025-07-01
@@ -11,6 +11,8 @@ Day reference:
 - Friday = 2025-07-03
 - Saturday = 2025-07-04
 - Sunday = 2025-07-05
+
+Any date outside this range is invalid. If the user says "Friday", the date MUST be 2025-07-03. If the user says "Saturday", the date MUST be 2025-07-04. Never deviate from this table.
 
 Members: jonny, tim, chris, eric
 Group: vocal_spectrum
@@ -113,5 +115,16 @@ export async function parseScheduleCommand(command, currentMember) {
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('No JSON found in Claude response');
 
-  return JSON.parse(jsonMatch[0]);
+  const parsed = JSON.parse(jsonMatch[0]);
+
+  // Guard: ensure event date is one of the 7 valid dates
+  const validDates = new Set([
+    '2025-06-29','2025-06-30','2025-07-01','2025-07-02',
+    '2025-07-03','2025-07-04','2025-07-05',
+  ]);
+  if (parsed.action === 'add' && parsed.event?.date && !validDates.has(parsed.event.date)) {
+    return { action: 'error', message: `Invalid date returned (${parsed.event.date}). Please specify a day of the week like "Friday" or "Saturday".` };
+  }
+
+  return parsed;
 }
